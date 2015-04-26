@@ -70,3 +70,5 @@ chsh -s /bin/bash # change back to Bash if you want
 ```
 
 Then open a new terminal window to see the effects.
+
+Clojure lein profile from here: http://jakemccrary.com/blog/2015/01/11/overview-of-my-leiningen-profiles-dot-clj/
