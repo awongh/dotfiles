@@ -4,14 +4,14 @@ alias homewifi='sudo iwconfig eth1 essid "linksys" key 73DAFF339F'
 alias foothill='ssh -v wongakir@losaltos.fhda.edu'
 alias footftp='sftp wongakir@losaltos.fhda.edu'
 footscp(){
-	scp -v "$1" wongakir@losaltos.fhda.edu:public_html 
+	scp -v "$1" wongakir@losaltos.fhda.edu:public_html
 }
 footscp2(){
 	scp -v "$1" wongakir@losaltos.fhda.edu:"$2"
 }
 footfolder(){
 	scp -vr "$1" wongakir@losaltos.fhda.edu:"$2"
-}	
+}
 getfoot(){
 	scp -v wongakir@losaltos.fhda.edu:"$1" .
 }
@@ -37,13 +37,13 @@ putdirtfolder(){
 }
 alias dtheme='cd /var/www/wordpress/wp-content/themes/dirtlab'
 getdirt(){
-	scp -v sfdirtadmin@72.167.232.226:"$1" . 
+	scp -v sfdirtadmin@72.167.232.226:"$1" .
 }
 getdirtfolder(){
-	scp -vr sfdirtadmin@72.167.232.226:"$1" . 
+	scp -vr sfdirtadmin@72.167.232.226:"$1" .
 }
 getdirtfolderplace(){
-	scp -vr sfdirtadmin@72.167.232.226:"$1" "$2" 
+	scp -vr sfdirtadmin@72.167.232.226:"$1" "$2"
 }
 
 putamy(){
@@ -58,11 +58,11 @@ scp -vr -P 21098 -i~.ssh/id_dsa.pub "$1" ichgof@199.188.200.61:~/public_html
 logtheme(){
 	ssh -v sfdirtadmin@72.167.232.226:/html/
 }
-alias dirtbackup='getdirtfolderplace html/sfdirtlab/public/wordpress/wp-content/themes/dirtlab ~/webprojects/dirtlab/wp_dirt_theme'	
+alias dirtbackup='getdirtfolderplace html/sfdirtlab/public/wordpress/wp-content/themes/dirtlab ~/webprojects/dirtlab/wp_dirt_theme'
 
-alias dirtpluginbackup='getdirtfolderplace html/sfdirtlab/public/wordpress/wp-content/plugins ~/webprojects/dirtlab/wp_dirt_theme'	
+alias dirtpluginbackup='getdirtfolderplace html/sfdirtlab/public/wordpress/wp-content/plugins ~/webprojects/dirtlab/wp_dirt_theme'
 alias tamtheme="cd /var/www/wordpress/wp-content/themes/tambikes"
-alias tambackup='getdirtfolderplace html/awongh/development/wordpress/wp-content/themes/tambikes ~/webprojects/tambikes/backup'	
+alias tambackup='getdirtfolderplace html/awongh/development/wordpress/wp-content/themes/tambikes ~/webprojects/tambikes/backup'
 
 alias tamupdate='putdirtfolder /var/www/wordpress/wp-content/themes/tambikes html/awongh/development/wordpress/wp-content/themes'
 
@@ -87,7 +87,7 @@ alias amplafijs='cd ~/amplafi/amplafi-web/src/main/webapp/js/amplafi'
 
 alias startmemcached='memcached -p 11211 -vv'
 
-alias startmemcachedb='memcachedb -p21201 -vv' 
+alias startmemcachedb='memcachedb -p21201 -vv'
 startdailybooth(){
 	#spawn access and error logs
 		#php
@@ -97,7 +97,7 @@ startdailybooth(){
 		#nginx local
 		#nginx admin
 	#start sphinx
-	#start gearmand 
+	#start gearmand
         #gnome-terminal -x gearmand
 	#start memcachedb
         gnome-terminal -x memcachedb -vv -p21201
@@ -113,14 +113,14 @@ startdailybooth(){
 }
 stopdailybooth(){
     #stop nginx
-    sudo /etc/init.d/nginx stop 
+    sudo /etc/init.d/nginx stop
     #dissable apache sites
     sudo a2dissite local.dailybooth.com
     sudo a2dissite admin.local.dailybooth.com
     #enable default site
     sudo a2ensite default
     #reload apache
-    sudo /etc/init.d/apache2 reload 
+    sudo /etc/init.d/apache2 reload
 }
 resetdailyboothdb(){
 
@@ -133,12 +133,12 @@ resetdailyboothdb(){
         CREATE DATABASE dailybooth;
     "
     #import files
-    mysql -u root -h localhost dailybooth<$PWD/DailyBooth/schema/2010-05-24/site.sql  
+    mysql -u root -h localhost dailybooth<$PWD/DailyBooth/schema/2010-05-24/site.sql
     mysql -u root -h localhost dailybooth<$PWD/DailyBooth/schema/drop_twitter_creds_from_users.sql
     mysql -u root -h localhost dailybooth<$PWD/DailyBooth/schema/set_default_values_for_pictures.sql
 }
 
-alias baseb='ssh -v -p 20068 browardh@advanced96.inmotionhosting.com' 
+alias baseb='ssh -v -p 20068 browardh@advanced96.inmotionhosting.com'
 
 putbbfolder(){
     scp -vr -P 20068 "$1" browardh@advanced96.inmotionhosting.com:"$2"
@@ -151,10 +151,10 @@ getbbfolder(){
 getbb(){
     scp -v -P 20068 browardh@advanced96.inmotionhosting.com:"$1" .
 }
- 
+
 putbb(){
     scp -v -P 20068 "$1" browardh@advanced96.inmotionhosting.com:"$2"
-}   
+}
 
 alias hsmroot='cd /home/awongh/code/work/hsm/svn/trunk/src/site/www/'
 alias hsmnewroot='cd /home/awongh/code/work/hsm/new/hsm'
@@ -163,13 +163,13 @@ alias hsmnewcheckout='svn --username akira --password Hsm1b3st co https://hsm.so
 alias sbmcheckout='svn --username akira --password Hsm1b3st co https://hsm.sourcerepo.com/hsm/sbm/trunk'
 
 setfoto(){
-    sudo a2dissite defualt 
+    sudo a2dissite defualt
     sudo a2dissite www.dev.snapshotscholar.com
     sudo a2ensite www.dev.fotovotr.com
     sudo /etc/init.d/apache2 restart
 }
 setsnap(){
-    sudo a2dissite defualt 
+    sudo a2dissite defualt
     sudo a2dissite www.dev.fotovotr.com
     sudo a2ensite www.dev.snapshotscholar.com
     sudo /etc/init.d/apache2 restart
@@ -178,7 +178,7 @@ setsnap(){
 setdefault(){
     sudo a2dissite www.dev.fotovotr.com
     sudo a2dissite www.dev.snapshotscholar.com
-    sudo a2ensite 
+    sudo a2ensite
     sudo /etc/init.d/apache2 restart
 }
 alias fbmg='ssh -v root@dev.snapshotbattle.com'
@@ -229,12 +229,12 @@ getapage(){
 	 # name everything html
      # --html-extension \
 	 # make all links point locally
-     # --convert-links \                        
+     # --convert-links \
 
 	 # don't follow domains outside website.org
      # --domains website.org \
 	 # dont get domians parent pages
-     # --no-parent \ 
+     # --no-parent \
 
 
 uberg(){
@@ -264,9 +264,9 @@ alias sphinxd="/usr/bin/searchd -c application/config/sphinx.conf --listen local
 alias sphinxindex="indexer -c application/config/sphinx.conf --rotate --verbose --all"
 
 acd(){
- 	sudo /usr/bin/acdcontrol /dev/usb/hiddev1 $1 
+ 	sudo /usr/bin/acdcontrol /dev/usb/hiddev1 $1
 }
-alias runq='/usr/bin/php -q public/index.php --uri=queue/daemon --queue=banning --max_priority=5 >> /var/log/php_errors.log' 
+alias runq='/usr/bin/php -q public/index.php --uri=queue/daemon --queue=banning --max_priority=5 >> /var/log/php_errors.log'
 
 alias vimswapclean='find . -name *.swp -name *.swo -name *.swn -exec rm -i '{}' \;'
 
@@ -274,10 +274,10 @@ alias cscopefilescreate="find . -name '*.php' -o -name '*.js' -o -name '*.tpl' !
 
 alias mdump='mongodump --db messages --collection objects_flags -o objects_flags_dump'
 
-alias mrest='mongorestore --db messages --collection objects_flags --verbose objects_flags_dump/messages' 
+alias mrest='mongorestore --db messages --collection objects_flags --verbose objects_flags_dump/messages'
 
 sbmlessc(){
- 	
+
 	main="/home/awongh/node_modules/.bin/lessc /home/awongh/code/work/hsm/new/sbs/sbm/assets/StyleGuide/less/sbm_main.less /home/awongh/code/work/hsm/new/sbs/sbm/public/static/style/sbm_main.css --verbose"
 	admin="/home/awongh/node_modules/.bin/lessc /home/awongh/code/work/hsm/new/sbs/sbm/assets/StyleGuide/less/sbm_admin.less /home/awongh/code/work/hsm/new/sbs/sbm/public/static/style/sbm_admin.css --verbose"
 
@@ -319,7 +319,7 @@ lessco(){
 }
 
 yermom(){
- 	
+
 	admin="node --debug-brk /home/awongh/node_modules/.bin/lessc /home/awongh/code/work/hsm/new/trunk/assets/StyleGuide/less/sbm_admin.less /home/awongh/code/work/hsm/new/trunk/public/static/style/sbm_admin.css "
 
 	eval "${admin}"
@@ -357,3 +357,22 @@ new-hbox(){
 }
 alias mysql=/usr/local/mysql-5.6.11-osx10.7-x86_64/bin/mysql
 alias passwords='gpg -d ~/.passwords.gpg'
+
+psql(){
+	main="/Applications/Postgres.app/Contents/Versions/9.4/bin/psql -p5432 $@"
+	eval "${main}"
+	res=$?
+	echo $1
+}
+createdb(){
+  main="/Applications/Postgres.app/Contents/Versions/9.4/bin/createdb $1"
+  eval "${main}"
+  res=$?
+  echo $1
+}
+dropdb(){
+  main="/Applications/Postgres.app/Contents/Versions/9.4/bin/dropdb $1"
+  eval "${main}"
+  res=$?
+  echo $1
+}
