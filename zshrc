@@ -47,7 +47,8 @@ export PATH="/usr/local/heroku/bin:$PATH"
 ### export PATH=$PATH:$HOME/.rvm/bin
 
 ### hack to include rvm gem bin paths
-export PATH=$PATH:$HOME.rvm/gems/ruby-1.9.3-p374@global/bin/rake:$HOME/.rvm/gems/ruby-1.9.3-p374/bin:/opt/local/bin
+# export PATH=$PATH:$HOME.rvm/gems/ruby-1.9.3-p374@global/bin/rake:$HOME/.rvm/gems/ruby-1.9.3-p374/bin:/opt/local/bin
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 set -o vi
 
