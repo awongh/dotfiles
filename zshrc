@@ -43,11 +43,7 @@ export PATH=/usr/local/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
-### generic rvm bin path
-### export PATH=$PATH:$HOME/.rvm/bin
-
-### hack to include rvm gem bin paths
-# export PATH=$PATH:$HOME.rvm/gems/ruby-1.9.3-p374@global/bin/rake:$HOME/.rvm/gems/ruby-1.9.3-p374/bin:/opt/local/bin
+export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 set -o vi
