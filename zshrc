@@ -43,6 +43,8 @@ export PATH=/usr/local/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
+export PATH="$PATH":/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin
+
 export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
