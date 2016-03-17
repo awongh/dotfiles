@@ -14,13 +14,20 @@ runtime! debian.vim
 " options, so any other options should be set AFTER setting 'compatible'.
 "set compatible
 
+" pathogen
+execute pathogen#infect()
+
+set t_Co=256
+
 " Vim5 and later versions support syntax highlighting. Uncommenting the next
 " line enables syntax highlighting by default.
+syntax on
+
+filetype plugin indent on
+
 syntax enable
 
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-set background=dark
+set term=xterm-256color
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -96,7 +103,7 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 
 let NERDTreeShowHidden=1
 
-filetype plugin on  
+filetype plugin on
 
 " matchit plugin html closing tag match
 set matchpairs+=<:>
@@ -113,7 +120,7 @@ set pastetoggle=<F2>
 set backspace=indent,eol,start
 
 " settings for easy grep
-let g:EasyGrepRecursive=1 
+let g:EasyGrepRecursive=1
 
 " use ack
 set grepprg=ack
@@ -124,8 +131,8 @@ let g:EasyGrepFilesToExclude="*.png,*.ri,bin,cache,docs,ri,rdoc,*.log,log"
 " set the rvm gem files
 " get a list of paths to add to search paths
 
-" let g:EasyGrepVimrcFiles=$GEM_PATH   
-let g:EasyGrepVimrcFiles="/code/vagrant/15-heroku/vm-rvm-path"   
+" let g:EasyGrepVimrcFiles=$GEM_PATH
+let g:EasyGrepVimrcFiles="/code/vagrant/15-heroku/vm-rvm-path"
 
 " folding: zo
 " folding with {{{
@@ -164,9 +171,6 @@ if filereadable(expand("~/.vimrc.local"))
   " noremap! jj <ESC>
   source ~/.vimrc.local
 endif
-
-" pathogen
-execute pathogen#infect()
 
 " set for mechagalaxy filetype
 au BufRead,BufNewFile *.game setfiletype php

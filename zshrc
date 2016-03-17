@@ -1,4 +1,5 @@
-# Path to your oh-my-zsh configuration.
+
+Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
@@ -23,6 +24,13 @@ source $HOME/.aliases
 
 # Uncomment following line if you want to disable colors in ls
 # DISABLE_LS_COLORS="true"
+
+
+# Set CLICOLOR if you want Ansi Colors in iTerm2
+export CLICOLOR=1
+#
+# # Set colors to match iTerm2 Terminal Colors
+export TERM=xterm-256color
 
 # Uncomment following line if you want to disable autosetting terminal title.
 # DISABLE_AUTO_TITLE="true"
