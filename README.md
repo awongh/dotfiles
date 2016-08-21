@@ -72,3 +72,12 @@ chsh -s /bin/bash # change back to Bash if you want
 Then open a new terminal window to see the effects.
 
 Clojure lein profile from here: http://jakemccrary.com/blog/2015/01/11/overview-of-my-leiningen-profiles-dot-clj/
+
+### todo:
+ - add this to env:
+```
+HOMEBREW_BUILD_FROM_SOURCE=1
+HOMEBREW_NO_AUTO_UPDATE=1
+HOMEBREW_NO_EMOJI=1
+HOMEBREW_NO_ANALYTICS=1
+```
