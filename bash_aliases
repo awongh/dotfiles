@@ -235,6 +235,18 @@ getapage(){
      # --domains website.org \
 	 # dont get domians parent pages
      # --no-parent \
+nodegrep(){
+	foo="grep --color=always --exclude-dir=\\*i18n\\* --exclude-dir=\\*node_modules\\* --exclude-dir=\\*.svn\\* --exclude-dir=\\*smarty_compiled\\* --exclude-dir=\\*log\\* --exclude=\\*min.js\\* --exclude=\\*cscope.out\\* --exclude=\\*tmp\\* -A2 -C2 -Rni \"$1\" ."
+
+	echo ${foo}
+
+	eval "${foo}"
+
+	res=$?
+
+	echo $1
+	return ${res}
+}
 
 
 uberg(){
@@ -375,4 +387,11 @@ dropdb(){
   eval "${main}"
   res=$?
   echo $1
+}
+
+alias tmux-pair='tmux attach-session -t pair'
+
+niftyremount(){
+  sudo kextunload -b com.apple.driver.AppleSDXC
+  sudo kextload -b com.apple.driver.AppleSDXC
 }

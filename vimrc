@@ -67,7 +67,7 @@ set autoindent
 set autoread                                                 " reload files when changed on disk, i.e. via `git checkout`
 set backspace=2                                              " Fix broken backspace in some setups
 set backupcopy=yes                                           " see :help crontab
-set clipboard=unnamed                                        " yank and paste with the system clipboard
+set clipboard+=unnamed
 set directory-=.                                             " don't store swapfiles in the current directory
 set encoding=utf-8
 set incsearch                                                " search as you type
@@ -88,7 +88,7 @@ if exists('$TMUX')  " Support resizing in tmux
 endif
 
 " newline without insert!
-map e o<CR><Esc>
+" map e o<CR><Esc>
 
 " tabs to spaces!!
 " :%s/\t/  /g
@@ -134,6 +134,7 @@ let g:EasyGrepFilesToExclude="*.png,*.ri,bin,cache,docs,ri,rdoc,*.log,log"
 " let g:EasyGrepVimrcFiles=$GEM_PATH
 let g:EasyGrepVimrcFiles="/code/vagrant/15-heroku/vm-rvm-path"
 
+setlocal foldmethod=syntax
 " folding: zo
 " folding with {{{
 set fdm=marker
