@@ -1,4 +1,0 @@
-# vim:filetype=crontab
-# To activate on OSX  $ crontab ~/.backup_crontab
-#min    hour    mday    month   wday    command
-0       22      *       *       *       /Users/akira/.cronbackup.sh
