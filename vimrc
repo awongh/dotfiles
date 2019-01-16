@@ -19,6 +19,8 @@ execute pathogen#infect()
 
 set t_Co=256
 
+set term=xterm-256color
+
 " Vim5 and later versions support syntax highlighting. Uncommenting the next
 " line enables syntax highlighting by default.
 syntax on
@@ -27,7 +29,9 @@ filetype plugin indent on
 
 syntax enable
 
-set term=xterm-256color
+set background=dark
+colorscheme solarized
+let g:solarized_termcolors=256
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -172,6 +176,3 @@ if filereadable(expand("~/.vimrc.local"))
   " noremap! jj <ESC>
   source ~/.vimrc.local
 endif
-
-" set for mechagalaxy filetype
-au BufRead,BufNewFile *.game setfiletype php
