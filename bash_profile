@@ -111,12 +111,13 @@ fi
 #export PS1="\[\033[38;5;2m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\]\n
 #\u @ \h \[$(tput sgr0)\]"
 function color_my_prompt {
-  local __user="$RESET$BASE2\u"
+  local __user="$RESET$YELLOW\u"
   local __host="$RESET$BASE0\h"
-  local __separate="$RESET$BASE2|"
+  local __separate="$RESET$YELLOW|"
   local __cur_location="$RESET$BLUE\w"           # capital 'W': current directory, small 'w': full file path
   local __git_branch_color="$RESET$GREEN"
-  local __prompt_tail="$RESET$VIOLET$"
+  local __prompt_tail="$RESET$VIOLET~"
+  local __att="$RESET$CYAN@"
   local __user_input_color="$RESET$BASE1"
   local __git_branch='$(__git_ps1)';
   
@@ -131,28 +132,28 @@ function color_my_prompt {
       __git_branch_color="$RESET$CYAN"
   fi
 
-  PS1="$__user@$__host$__separate$__cur_location\n$__prompt_tail$__user_input_color"
+  PS1="$__user$__att$__host$__separate$__cur_location\n$__prompt_tail$__user_input_color"
 
-# Create a string like:  "[ Apr 25 16:06 ]" with time in RED.
-printf -v PS1RHS "$__git_branch_color $__git_branch" # -1 is current time
+  # Create a string like:  "[ Apr 25 16:06 ]" with time in RED.
+  printf -v PS1RHS "$__git_branch_color $__git_branch" # -1 is current time
 
-# Strip ANSI commands before counting length
-# From: https://www.commandlinefu.com/commands/view/12043/remove-color-special-escape-ansi-codes-from-text-with-sed
-PS1RHS_stripped=$(sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"$PS1RHS")
+  # Strip ANSI commands before counting length
+  # From: https://www.commandlinefu.com/commands/view/12043/remove-color-special-escape-ansi-codes-from-text-with-sed
+  PS1RHS_stripped=$(sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"$PS1RHS")
 
-# Reference: https://en.wikipedia.org/wiki/ANSI_escape_code
-local Save='\e[s' # Save cursor position
-local Rest='\e[u' # Restore cursor to save point
+  # Reference: https://en.wikipedia.org/wiki/ANSI_escape_code
+  local Save='\e[s' # Save cursor position
+  local Rest='\e[u' # Restore cursor to save point
 
-# Save cursor position, jump to right hand edge, then go left N columns where
-# N is the length of the printable RHS string. Print the RHS string, then
-# return to the saved position and print the LHS prompt.
+  # Save cursor position, jump to right hand edge, then go left N columns where
+  # N is the length of the printable RHS string. Print the RHS string, then
+  # return to the saved position and print the LHS prompt.
 
-# Note: "\[" and "\]" are used so that bash can calculate the number of
-# printed characters so that the prompt doesn't do strange things when
-# editing the entered text.
+  # Note: "\[" and "\]" are used so that bash can calculate the number of
+  # printed characters so that the prompt doesn't do strange things when
+  # editing the entered text.
 
-PS1="\[${Save}\e[${COLUMNS:-$(tput cols)}C\e[${#PS1RHS_stripped}D${PS1RHS}${Rest}\]${PS1}"
+  PS1="\[${Save}\e[${COLUMNS:-$(tput cols)}C\e[${#PS1RHS_stripped}D${PS1RHS}${Rest}\]${PS1}"
 
 
 
