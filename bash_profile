@@ -126,7 +126,7 @@ function color_my_prompt {
 #if [[ $LC_CTYPE =~ '\.[Uu][Tt][Ff]-?8' ]]; then
   if [[ "$(locale charmap)" = "UTF-8" ]]; then
 
-    local __prompt_tail=$'┤'
+    local __prompt_tail=$'‣'
   else
     local __prompt_tail="$BASE1~"
   fi
