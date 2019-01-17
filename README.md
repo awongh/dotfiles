@@ -81,3 +81,39 @@ HOMEBREW_NO_AUTO_UPDATE=1
 HOMEBREW_NO_EMOJI=1
 HOMEBREW_NO_ANALYTICS=1
 ```
+
+### git prompt:
+
+ #### * unstaged changes
+ #### + staged changes
+
+ In addition, if you set GIT_PS1_SHOWDIRTYSTATE to a nonempty value,
+ unstaged (*) and staged (+) changes will be shown next to the branch
+ name.  You can configure this per-repository with the
+ bash.showDirtyState variable, which defaults to true once
+ GIT_PS1_SHOWDIRTYSTATE is enabled.
+
+ #### $ stashed
+
+ You can also see if currently something is stashed, by setting
+ GIT_PS1_SHOWSTASHSTATE to a nonempty value. If something is stashed,
+ then a '$' will be shown next to the branch name.
+
+ #### % untracked files
+
+ If you would like to see if there're untracked files, then you can set
+ GIT_PS1_SHOWUNTRACKEDFILES to a nonempty value. If there're untracked
+ files, then a '%' will be shown next to the branch name.  You can
+ configure this per-repository with the bash.showUntrackedFiles
+ variable, which defaults to true once GIT_PS1_SHOWUNTRACKEDFILES is
+ enabled.
+
+ #### > behind head
+ #### <> diverged head
+ #### = up to date with head
+
+ If you would like to see the difference between HEAD and its upstream,
+ set GIT_PS1_SHOWUPSTREAM="auto".  A "<" indicates you are behind, ">"
+ indicates you are ahead, "<>" indicates you have diverged and "="
+ indicates that there is no difference.
+

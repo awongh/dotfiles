@@ -111,16 +111,26 @@ fi
 #export PS1="\[\033[38;5;2m\]\H\[$(tput sgr0)\]\[\033[38;5;15m\]\n
 #\u @ \h \[$(tput sgr0)\]"
 function color_my_prompt {
-  local __user="$RESET$YELLOW\u"
-  local __host="$RESET$BASE0\h"
-  local __separate="$RESET$YELLOW|"
-  local __cur_location="$RESET$BLUE\w"           # capital 'W': current directory, small 'w': full file path
-  local __git_branch_color="$RESET$GREEN"
-  local __prompt_tail="$RESET$VIOLET~"
-  local __att="$RESET$CYAN@"
-  local __user_input_color="$RESET$BASE1"
+  local __reset="$RESET"
+  local __user="$YELLOW\u"
+  local __host="$BASE0\h"
+  local __separate="$YELLOW|"
+  local __cur_location="$BLUE\w"           # capital 'W': current directory, small 'w': full file path
+  local __git_branch_color="$GREEN"
+  local __att="$CYAN@"
+  local __user_input_color="$BASE1"
   local __git_branch='$(__git_ps1)';
-  
+  local __bold='$(tput bold)'
+
+
+#if [[ $LC_CTYPE =~ '\.[Uu][Tt][Ff]-?8' ]]; then
+  if [[ "$(locale charmap)" = "UTF-8" ]]; then
+
+    local __prompt_tail=$'🌝'
+  else
+    local __prompt_tail="$BASE1~"
+  fi
+
   # colour branch name depending on state
   if [[ "$(__git_ps1)" =~ "*" ]]; then     # if repository is dirty
       __git_branch_color="$RESET$RED"
@@ -132,7 +142,7 @@ function color_my_prompt {
       __git_branch_color="$RESET$CYAN"
   fi
 
-  PS1="$__user$__att$__host$__separate$__cur_location\n$__prompt_tail$__user_input_color"
+  PS1="$__reset$__bold$__user$__reset$__bold$__att$__reset$__bold$__host$__reset$__bold$__separate$__reset$__bold$__cur_location\n$__reset$__bold$__prompt_tail$__reset$__bold$__user_input_color"
 
   # Create a string like:  "[ Apr 25 16:06 ]" with time in RED.
   printf -v PS1RHS "$__git_branch_color $__git_branch" # -1 is current time
@@ -162,7 +172,7 @@ function color_my_prompt {
 
 # configure PROMPT_COMMAND which is executed each time before PS1
 export PROMPT_COMMAND=color_my_prompt
- 
+# git prompt script from git: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 # if .git-prompt.sh exists, set options and execute it
 if [ -f ~/.git-prompt.sh ]; then
   GIT_PS1_SHOWDIRTYSTATE=true
