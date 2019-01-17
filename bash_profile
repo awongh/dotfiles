@@ -126,7 +126,7 @@ function color_my_prompt {
 #if [[ $LC_CTYPE =~ '\.[Uu][Tt][Ff]-?8' ]]; then
   if [[ "$(locale charmap)" = "UTF-8" ]]; then
 
-    local __prompt_tail=$'🌝'
+    local __prompt_tail=$'┤'
   else
     local __prompt_tail="$BASE1~"
   fi
@@ -142,14 +142,17 @@ function color_my_prompt {
       __git_branch_color="$RESET$CYAN"
   fi
 
-  PS1="$__reset$__bold$__user$__reset$__bold$__att$__reset$__bold$__host$__reset$__bold$__separate$__reset$__bold$__cur_location\n$__reset$__bold$__prompt_tail$__reset$__bold$__user_input_color"
+  HAHA="$__reset$__bold$__user$__reset$__bold$__att$__reset$__bold$__host$__reset$__bold$__separate$__reset$__bold$__cur_location\n"
+  BANANA="$__reset$__prompt_tail$__reset$__bold$__user_input_color"
 
   # Create a string like:  "[ Apr 25 16:06 ]" with time in RED.
-  printf -v PS1RHS "$__git_branch_color $__git_branch" # -1 is current time
+  printf -v PS1RHS "$__git_branch_color$__git_branch"
 
   # Strip ANSI commands before counting length
   # From: https://www.commandlinefu.com/commands/view/12043/remove-color-special-escape-ansi-codes-from-text-with-sed
   PS1RHS_stripped=$(sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"$PS1RHS")
+  HAHA_stripped=$(sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"$HAHA")
+  BANANA_stripped=$(sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"$BANANA")
 
   # Reference: https://en.wikipedia.org/wiki/ANSI_escape_code
   local Save='\e[s' # Save cursor position
@@ -163,11 +166,7 @@ function color_my_prompt {
   # printed characters so that the prompt doesn't do strange things when
   # editing the entered text.
 
-  PS1="\[${Save}\e[${COLUMNS:-$(tput cols)}C\e[${#PS1RHS_stripped}D${PS1RHS}${Rest}\]${PS1}"
-
-
-
-
+  PS1="\[${Save}\e[${COLUMNS:-$(tput cols)}C\e[${#PS1RHS}D${PS1RHS}${Rest}\]\[${HAHA_stripped}\]\[${BANANA_stripped}\]"
 }
 
 # configure PROMPT_COMMAND which is executed each time before PS1
