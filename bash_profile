@@ -143,7 +143,7 @@ function color_my_prompt {
   fi
 
   HAHA="$__reset$__bold$__user$__reset$__bold$__att$__reset$__bold$__host$__reset$__bold$__separate$__reset$__bold$__cur_location\n"
-  BANANA="$__reset$__prompt_tail$__reset$__bold$__user_input_color"
+  BANANA="$__reset$__prompt_tail$__reset$__user_input_color"
 
   # Create a string like:  "[ Apr 25 16:06 ]" with time in RED.
   printf -v PS1RHS "$__git_branch_color$__git_branch"
