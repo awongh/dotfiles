@@ -29,3 +29,8 @@ psql(){
 alias tmux-pair='tmux attach-session -t pair'
 
 alias sublime="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+
+printcolumns(){
+  local __cols=$(tput cols)
+  echo $((__cols - 10))
+}

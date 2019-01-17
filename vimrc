@@ -17,6 +17,8 @@ runtime! debian.vim
 " pathogen
 execute pathogen#infect()
 
+let mapleader = ','
+
 set t_Co=256
 
 set term=xterm-256color
@@ -32,6 +34,9 @@ syntax enable
 set background=dark
 colorscheme solarized
 let g:solarized_termcolors=256
+
+set hlsearch
+set showmatch
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
@@ -106,6 +111,16 @@ autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 
 let NERDTreeShowHidden=1
+
+" Toggle display of the tree with <Leader> + n:
+nmap <leader>n :NERDTreeToggle<CR>
+
+" Locate the focused file in the tree with <Leader> + j:
+nmap <leader>j :NERDTreeFind<CR>
+
+" Always open the tree when booting Vim, but don’t focus it:
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
 
 filetype plugin on
 
