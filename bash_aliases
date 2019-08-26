@@ -19,16 +19,7 @@ alias gitpushcheck='git log --branches --not --remotes'
 
 # alias passwords='gpg -d ~/.passwords.gpg'
 
-psql(){
-	main="/Applications/Postgres.app/Contents/Versions/latest/bin/psql -p5432 $@"
-	eval "${main}"
-	res=$?
-	echo $1
-}
-
 alias tmux-pair='tmux attach-session -t pair'
-
-alias sublime="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
 printcolumns(){
   local __cols=$(tput cols)
