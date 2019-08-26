@@ -204,3 +204,10 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 force_color_prompt=yes
+
+# Ubuntu key remap
+
+################################################################
+if [ -s ~/.Xmodmap ]; then
+    xmodmap ~/.Xmodmap
+fi
