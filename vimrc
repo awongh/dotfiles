@@ -14,8 +14,22 @@ runtime! debian.vim
 " options, so any other options should be set AFTER setting 'compatible'.
 "set compatible
 
-" pathogen
-execute pathogen#infect()
+
+oset nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-surround'
+Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'rking/ag.vim'
+call vundle#end()            " required
+
 
 let mapleader = ','
 
@@ -106,8 +120,6 @@ autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 
 let NERDTreeShowHidden=1
@@ -138,20 +150,8 @@ set pastetoggle=<F2>
 " delete/backspace keys
 set backspace=indent,eol,start
 
-" settings for easy grep
-let g:EasyGrepRecursive=1
-
 " use ack
 set grepprg=ack
-
-" ignore git files
-let g:EasyGrepFilesToExclude="*.png,*.ri,bin,cache,docs,ri,rdoc,*.log,log"
-
-" set the rvm gem files
-" get a list of paths to add to search paths
-
-" let g:EasyGrepVimrcFiles=$GEM_PATH
-let g:EasyGrepVimrcFiles="/code/vagrant/15-heroku/vm-rvm-path"
 
 setlocal foldmethod=syntax
 " folding: zo
@@ -191,3 +191,6 @@ if filereadable(expand("~/.vimrc.local"))
   " noremap! jj <ESC>
   source ~/.vimrc.local
 endif
+
+
+

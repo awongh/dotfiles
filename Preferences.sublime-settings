@@ -37,7 +37,7 @@
   "caret_style": "phase",
 
   "draw_minimap_border": true,
-  
+
   // line 372 in Default, this simplifies what files and folders don't show up in the side bar, add more at your own peril
   "file_exclude_patterns":
   [
@@ -46,7 +46,7 @@
     "*.pdf",
     "*.psd",
     "*.sassc",
-    "*.scssc",    
+    "*.scssc",
     "*.sublime-project",
     "*.sublime-workspace",
     "*.zip",
@@ -83,9 +83,9 @@
   // ANNOYING OSX-only bug that prevents files opening in their own window
   "open_files_in_new_window": false,
 
-  // Why? Because I use a large 27" monitor on top of my laptop screen    
-  "scroll_past_end": true,    
-  
+  // Why? Because I use a large 27" monitor on top of my laptop screen
+  "scroll_past_end": true,
+
   // Why not turn this on by default? Spell check all the things!
   "spell_check": true,
   "trim_trailing_white_space_on_save": true,
