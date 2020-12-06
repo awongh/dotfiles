@@ -4,3 +4,6 @@ vim/.VimballRecord
 vim/bundle
 
 .DS_Store
+
+# Ignore the installed plugins
+vim/plugged/**
