@@ -178,6 +178,27 @@ else
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
 
+" ALE sytnax stuff
+
+let g:ale_sign_error='●'
+let g:ale_sign_warning='.'
+let g:ale_lint_on_enter=0
+let g:ale_lint_on_text_changed='never'
+
+let g:ale_linter_aliases = {
+    \ 'jsx': ['javascript'],
+    \ 'markdown': ['javascript']
+    \ }
+
+let g:ale_linters = {
+    \ 'javascript': ['eslint'],
+    \ 'jsx': ['eslint'],
+    \ 'markdown': ['eslint']
+    \ }
+
+let g:ale_javascript_eslint_executable='npx eslint'
+
+
 " Go crazy!
 if filereadable(expand("~/.vimrc.local"))
   " In your .vimrc.local, you might like:

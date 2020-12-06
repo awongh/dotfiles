@@ -1,7 +1,7 @@
 # alias sudo='sudo env PATH=$PATH'
 
 uberg(){
-	foo="grep --color=always --exclude-dir=\\*i18n\\* --exclude-dir=\\*.svn\\* --exclude-dir=\\*smarty_compiled\\* --exclude-dir=\\*log\\* --exclude=\\*min.js\\* --exclude=\\*cscope.out\\* --exclude=\\*tmp\\* -A2 -C2 -Rni \"$1\" ."
+	foo="grep --color=always --exclude-dir=\\*node_modules\\* --exclude-dir=\\*i18n\\* --exclude-dir=\\*.svn\\* --exclude-dir=\\*smarty_compiled\\* --exclude-dir=\\*log\\* --exclude=\\*min.js\\* --exclude=\\*cscope.out\\* --exclude=\\*tmp\\* -A2 -C2 -Rni \"$1\" ."
 
 	echo ${foo}
 
