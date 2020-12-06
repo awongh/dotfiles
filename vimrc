@@ -14,9 +14,6 @@ runtime! debian.vim
 " options, so any other options should be set AFTER setting 'compatible'.
 "set compatible
 
-" pathogen
-execute pathogen#infect()
-
 let mapleader = ','
 
 set t_Co=256
@@ -31,12 +28,57 @@ filetype plugin indent on
 
 syntax enable
 
+set hlsearch
+set showmatch
+
+
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+
+"                             PLUGINS
+
+" ==================================================================
+" ==================================================================
+" ==================================================================
+
+call plug#begin('~/.vim/plugged')
+
+" Reload .vimrc and :PlugInstall to install plugins.
+
+
+
+
+
+Plug 'altercation/vim-colors-solarized'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+Plug 'kien/rainbow_parentheses.vim', { 'for': 'clojure' }
+Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
+
+
+
+
+" Initialize plugin system
+call plug#end()
+
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+" ==================================================================
+
 set background=dark
 colorscheme solarized
 let g:solarized_termcolors=256
-
-set hlsearch
-set showmatch
 
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file

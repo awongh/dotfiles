@@ -1,5 +1,16 @@
 # Vim Notes
 
+#### 2020 - 12 - 8
+
+Currently installed packages:
+
+
+
+
+
+
+## OLD
+
 Coming Home to Vim
 
 https://news.ycombinator.com/item?id=4218575
