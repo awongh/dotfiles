@@ -1,20 +1,5 @@
-" All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
-" you can find below.  If you wish to change any of those settings, you should
-" do it in this file (/etc/vim/vimrc), since debian.vim will be overwritten
-" everytime an upgrade of the vim packages is performed.  It is recommended to
-" make changes after sourcing debian.vim since it alters the value of the
-" 'compatible' option.
-
-" This line should not be removed as it ensures that various options are
-" properly set to work with the Vim-related packages available in Debian.
-runtime! debian.vim
-
-" Uncomment the next line to make Vim more Vi-compatible
-" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
-" options, so any other options should be set AFTER setting 'compatible'.
-"set compatible
-
-let mapleader = ','
+" leader key - change this to something else later
+"let mapleader = ','
 
 set t_Co=256
 
@@ -24,10 +9,13 @@ set term=xterm-256color
 " line enables syntax highlighting by default.
 syntax on
 
+" set filetype things
+" https://vi.stackexchange.com/questions/10124/what-is-the-difference-between-filetype-plugin-indent-on-and-filetype-indent
 filetype plugin indent on
 
 syntax enable
 
+" searching things
 set hlsearch
 set showmatch
 
@@ -54,7 +42,7 @@ call plug#begin('~/.vim/plugged')
 
 
 
-
+Plug 'adelarsq/vim-matchit'
 Plug 'altercation/vim-colors-solarized'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
@@ -76,35 +64,35 @@ call plug#end()
 " ==================================================================
 " ==================================================================
 
+" color stuff
 set background=dark
 colorscheme solarized
 let g:solarized_termcolors=256
 
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-"if has("autocmd")
-"  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-"    \| exe "normal g'\"" | endif
-"endif
+" jump to the last position when reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal g'\"" | endif
+endif
 
-" Uncomment the following to have Vim load indentation rules according to the
+" load indentation rules according to the
 " detected filetype. Per default Debian Vim only load filetype specific
 " plugins.
-"if has("autocmd")
-"  filetype indent on
-"endif
+if has("autocmd")
+  filetype indent on
+endif
 
 " The following are commented out as they cause vim to behave a lot
 " differently from regular Vi. They are highly recommended though.
-set showcmd		" Show (partial) command in status line.
-set showmatch		" Show matching brackets.
-set ignorecase		" Do case insensitive matching
-set smartcase		" Do smart case matching
-set incsearch		" Incremental search
-"set autowrite		" Automatically save before commands like :next and :make
+set showcmd " Show (partial) command in status line.
+set showmatch " Show matching brackets.
+set ignorecase " Do case insensitive matching
+set smartcase " Do smart case matching
+set incsearch " Incremental search
+"set autowrite " Automatically save before commands like :next and :make
 "set hidden             " Hide buffers when they are abandoned
-set mouse=a		" Enable mouse usage (all modes) in terminals
 
+" show line numbers
 set number
 
 " set tabs to spaces
@@ -173,27 +161,13 @@ set matchpairs+=<:>
 set formatoptions-=cro
 setl noai nocin nosi inde=
 
+" https://stackoverflow.com/questions/2514445/turning-off-auto-indent-when-pasting-text-into-vim
 nnoremap <F2> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 
 " delete/backspace keys
 set backspace=indent,eol,start
-
-" settings for easy grep
-let g:EasyGrepRecursive=1
-
-" use ack
-set grepprg=ack
-
-" ignore git files
-let g:EasyGrepFilesToExclude="*.png,*.ri,bin,cache,docs,ri,rdoc,*.log,log"
-
-" set the rvm gem files
-" get a list of paths to add to search paths
-
-" let g:EasyGrepVimrcFiles=$GEM_PATH
-let g:EasyGrepVimrcFiles="/code/vagrant/15-heroku/vm-rvm-path"
 
 setlocal foldmethod=syntax
 " folding: zo
@@ -218,39 +192,4 @@ if exists('$TMUX')
 else
   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
-
-" ALE sytnax stuff
-
-let g:ale_sign_error='●'
-let g:ale_sign_warning='.'
-let g:ale_lint_on_enter=0
-let g:ale_lint_on_text_changed='never'
-
-let g:ale_linter_aliases = {
-    \ 'jsx': ['javascript'],
-    \ 'markdown': ['javascript']
-    \ }
-
-let g:ale_linters = {
-    \ 'javascript': ['eslint'],
-    \ 'jsx': ['eslint'],
-    \ 'markdown': ['eslint']
-    \ }
-
-let g:ale_javascript_eslint_executable='npx eslint'
-
-
-" Go crazy!
-if filereadable(expand("~/.vimrc.local"))
-  " In your .vimrc.local, you might like:
-  "
-  " set autowrite
-  " set nocursorline
-  " set nowritebackup
-  " set whichwrap+=<,>,h,l,[,] " Wrap arrow keys between lines
-  "
-  " autocmd! bufwritepost .vimrc source ~/.vimrc
-  " noremap! jj <ESC>
-  source ~/.vimrc.local
 endif
