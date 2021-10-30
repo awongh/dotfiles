@@ -34,3 +34,8 @@ printcolumns(){
   local __cols=$(tput cols)
   echo $((__cols - 10))
 }
+
+# copy the third line of the pass into the clipboard
+getpass(){
+  pass $1 | sed -n '3p' |  pbcopy
+}

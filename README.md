@@ -92,7 +92,7 @@ homebrew
 
 brew install tmux
 
-# rbenv
+#### rbenv
 
 rbenv
 
@@ -107,6 +107,8 @@ echo $PATH
 gem install bundler
 ```
 
+nvm
+
 dotfiles
 
 vim install plugins
@@ -114,6 +116,12 @@ vim install plugins
 karabiner keyboard remapper
 
 unix pass manager
+
+better touch tool
+
+postgres.app
+
+vscode?
 
 
 
