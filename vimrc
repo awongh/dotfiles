@@ -37,7 +37,8 @@ set showmatch
 
 call plug#begin('~/.vim/plugged')
 
-" Reload .vimrc and :PlugInstall to install plugins.
+" Reload .vimrc
+" Run :PlugInstall to install plugins.
 
 
 
@@ -45,6 +46,9 @@ call plug#begin('~/.vim/plugged')
 Plug 'adelarsq/vim-matchit'
 Plug 'altercation/vim-colors-solarized'
 Plug 'scrooloose/nerdtree'
+
+Plug 'tomlion/vim-solidity'
+
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
 Plug 'kien/rainbow_parentheses.vim', { 'for': 'clojure' }
