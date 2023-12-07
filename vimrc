@@ -54,6 +54,7 @@ Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
 Plug 'kien/rainbow_parentheses.vim', { 'for': 'clojure' }
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 
+Plug 'leafgarland/typescript-vim'
 
 
 

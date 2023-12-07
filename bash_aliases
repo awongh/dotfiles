@@ -39,3 +39,6 @@ printcolumns(){
 getpass(){
   pass $1 | sed -n '3p' |  pbcopy
 }
+
+alias python='eval $(which python3.10)'
+alias pip='eval $(which pip3.10)'
