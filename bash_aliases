@@ -42,3 +42,16 @@ getpass(){
 
 alias python='eval $(which python3.10)'
 alias pip='eval $(which pip3.10)'
+
+
+# Define the function in .zprofile
+passc() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: passc <argument>"
+    return 1
+  fi
+
+  pass "$1" | head -n 1 | pbcopy
+}
+
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
