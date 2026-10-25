@@ -2,3 +2,5 @@
 
 # Ignore the installed plugins
 vim/plugged/**
+
+/vim/.netrwhist
