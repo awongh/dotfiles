@@ -118,46 +118,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# check nvmrc files
-# Auto-load Node version from .nvmrc if it exists
-autoload -U add-zsh-hook
-
-load-nvmrc() {
-  # Ensure nvm is available
-  if ! command -v nvm &>/dev/null; then
-    return
-  fi
-
-  local node_version
-  local nvmrc_path
-
-  nvmrc_path=$(nvm_find_nvmrc)
-
-  if [ -n "$nvmrc_path" ]; then
-    node_version=$(cat "$nvmrc_path")
-
-    # Only switch if necessary
-    if [ "$node_version" != "$(nvm current)" ]; then
-      if nvm ls "$node_version" &>/dev/null; then
-        nvm use --silent "$node_version" >/dev/null 2>&1
-        echo "Using Node.js $(nvm current)"
-      else
-        echo "⚠️  Node.js version '$node_version' (from .nvmrc) is not installed."
-        echo "    Run 'nvm install $node_version' to install it."
-      fi
-    fi
-  else
-    # No .nvmrc found, revert to default if not already using it
-    if [ "$(nvm current)" != "default" ]; then
-      nvm use default >/dev/null 2>&1
-      echo "Reverted to Node.js $(nvm current)"
-    fi
-  fi
-}
-
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc  # Run once when the shell starts
-
 source ${HOME}/.ghcup/env
 
 # pnpm
@@ -174,3 +134,10 @@ fpath=(/Users/akira/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+# java / android / react native paths
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH
+export PATH="/usr/local/opt/openjdk@17/bin:$PATH"
+
+export SSH_AUTH_SOCK=/Users/akira/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh

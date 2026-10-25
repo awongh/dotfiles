@@ -1,0 +1,119 @@
+# ~/.aerospace.toml
+
+config-version = 2
+
+start-at-login = true
+
+persistent-workspaces = [
+    "1", "2", "3", "4", "5", "6", "7", "8", "9",
+]
+
+# Only tiles or accordion are valid here.
+default-root-container-layout = "tiles"
+default-root-container-orientation = "auto"
+
+# Float every newly detected window.
+on-window-detected = [
+    {
+        check-further-callbacks = true,
+        run = "layout floating",
+    },
+]
+
+# Simplify nested tiling containers
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Keep accordion layouts usable if you choose one
+accordion-padding = 60
+
+# Move the pointer to the active monitor when changing monitors
+on-focused-monitor-changed = [
+    "move-mouse monitor-lazy-center",
+]
+
+# Small gaps around and between windows
+[gaps]
+inner.horizontal = 0
+inner.vertical = 0
+outer.left = 0
+outer.bottom = 0
+outer.top = 0
+outer.right = 0
+
+
+[mode.main.binding]
+
+# ------------------------------------------------------------
+# Workspace navigation
+# ------------------------------------------------------------
+
+# Vim-style left/right movement through AeroSpace workspaces
+ctrl-alt-h = "workspace --wrap-around prev"
+ctrl-alt-l = "workspace --wrap-around next"
+
+# Return to the previously focused workspace
+# ctrl-tab = "workspace-back-and-forth"
+
+# Move the focused window to the adjacent workspace and follow it
+ctrl-shift-h = "move-node-to-workspace --focus-follows-window --wrap-around prev"
+ctrl-shift-l = "move-node-to-workspace --focus-follows-window --wrap-around next"
+
+
+# ------------------------------------------------------------
+# Window navigation within the current workspace
+# ------------------------------------------------------------
+
+# alt-h = "focus left"
+# alt-j = "focus down"
+# alt-k = "focus up"
+# alt-l = "focus right"
+
+
+# ------------------------------------------------------------
+# Move windows within the current workspace
+# ------------------------------------------------------------
+
+# alt-shift-h = "move left"
+# alt-shift-j = "move down"
+# alt-shift-k = "move up"
+# alt-shift-l = "move right"
+
+
+# ------------------------------------------------------------
+# Layout controls
+# ------------------------------------------------------------
+
+# Toggle AeroSpace fullscreen.
+alt-f = "fullscreen"
+
+# Toggle between a floating and tiled window
+alt-shift-space = "layout floating tiling"
+
+# Change the tiling orientation
+alt-slash = "layout tiles horizontal vertical"
+
+# Toggle between tiled and accordion layouts
+# alt-comma = "layout accordion horizontal vertical"
+# take all current workspace windows and switch them into tiling mode
+alt-shift-v = 'exec-and-forget ~/.dotfiles/aerospace/toggle-workspace-layout.sh'
+
+# ------------------------------------------------------------
+# Resize the focused window
+# ------------------------------------------------------------
+
+# alt-minus = "resize smart -50"
+# alt-equal = "resize smart +50"
+
+# ------------------------------------------------------------
+# Window and configuration controls
+# ------------------------------------------------------------
+
+# Close the focused window
+# alt-shift-q = "close"
+
+# Reload this configuration file
+ctrl-alt-shift-r = "reload-config"
+
+# --
+

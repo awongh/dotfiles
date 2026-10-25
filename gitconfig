@@ -1,0 +1,19 @@
+[alias]
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit
+[user]
+  name = awongh
+  email = akira@awongh.com
+  signingkey = /Users/akira/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/PublicKeys/cd71886891b8c3fcd04959410892f4d4.pub
+[init]
+  defaultBranch = main
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+[commit]
+  gpgsign = true
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  allowedSignersFile = ~/.gitallowedsigners
