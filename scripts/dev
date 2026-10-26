@@ -12,82 +12,71 @@ if (( NVIM_PERCENT <= 0 || CODEX_PERCENT <= 0 || NVIM_PERCENT + CODEX_PERCENT !=
   die 'NVIM_PERCENT and CODEX_PERCENT must be positive integers totaling 100.'
 fi
 
-attach=0
-if [[ ${1:-} == --attach ]]; then
-  attach=1
-  shift
-fi
 (( $# <= 1 )) || die 'usage: dev [project-directory]'
 project=$(cd -- "${1:-$PWD}" && pwd -P) || die 'project directory does not exist or is inaccessible.'
 
-for tool in tmux tmuxp nvim codex python3; do
-  command -v "$tool" >/dev/null || die "missing $tool; install it and ensure it is on your login-shell PATH. For tmux/tmuxp: brew install tmux tmuxp"
+for tool in tmux nvim codex; do
+  command -v "$tool" >/dev/null || die "missing $tool; install it and ensure it is on your PATH. For tmux: brew install tmux"
 done
 tmux -V >/dev/null || die 'tmux cannot start; try brew reinstall tmux.'
 
-if (( ! attach )); then
-  [[ -d /Applications/iTerm.app || -d "$HOME/Applications/iTerm.app" ]] || die 'install iTerm2 in /Applications or ~/Applications.'
-  # Quote once for each shell boundary; AppleScript receives data via argv.
-  launcher=${0:A}
-  inner="${(q)launcher} --attach ${(q)project}"
-  launch_command="/bin/zsh -lic ${(q)inner}"
-  osascript - "$launch_command" <<'APPLESCRIPT'
-on run argv
-  tell application "iTerm2"
-    activate
-    if (count of windows) = 0 then
-      set targetWindow to (create window with default profile command (item 1 of argv))
-    else
-      tell current window
-        set targetTab to (create tab with default profile command (item 1 of argv))
-      end tell
-    end if
-  end tell
-end run
-APPLESCRIPT
-  exit
+if [[ -n ${TMUX:-} ]]; then
+  # Split the invoking pane in its existing window. Keep tmux's environment
+  # intact so the split uses the same server, even with a custom socket.
+  pane=${TMUX_PANE:?missing tmux pane}
+  tmux display-message -p -t "$pane" '#{pane_id}' >/dev/null || die 'cannot find the invoking tmux pane.'
+  nvim_path=$(command -v nvim)
+  codex_path=$(command -v codex)
+  tmux split-window -d -v -l "${CODEX_PERCENT}%" -t "$pane" -c "$project" "exec ${(q)codex_path}" || die 'could not split the current pane.'
+  tmux select-pane -t "$pane"
+  # Replacing the shell avoids a command queued behind this running script.
+  exec tmux respawn-pane -k -t "$pane" -c "$project" "exec ${(q)nvim_path} ."
 fi
 
-# The new iTerm tab is a separate client, even when invoked inside tmux.
-unset TMUX TMUX_PANE
-session=$(python3 - "$project" <<'PY'
+command -v python3 >/dev/null || die 'missing python3; install it and ensure it is on your PATH.'
+session=$(python3 - "$project" <<'PYSESSION'
 import hashlib, os, re, sys
 path = sys.argv[1]
 label = re.sub(r'[^a-zA-Z0-9_-]', '-', os.path.basename(path))[:40] or 'root'
 print('dev-' + label + '-' + hashlib.sha256(os.fsencode(path)).hexdigest()[:16])
-PY
+PYSESSION
 )
 
+# A previous failed launch may have left a project session with only a shell.
+# Keep any existing windows; create an editor window when no live pair exists.
 if ! tmux has-session -t "=$session" 2>/dev/null; then
-  workspace_dir=$(mktemp -d "${TMPDIR:-/tmp}/dev-tmuxp.XXXXXXXX")
-  workspace="$workspace_dir/workspace.json"
-  trap 'rm -f -- "$workspace"; rmdir -- "$workspace_dir"' EXIT
-  python3 - "$workspace" "$project" "$session" "$NVIM_PERCENT" <<'PY'
-import json, sys
-filename, directory, session, percent = sys.argv[1:]
-with open(filename, 'w') as stream:
-    json.dump({
-        'session_name': session,
-        # tmuxp expands variables once. Indirection preserves literal $ in paths.
-        'start_directory': '${DEV_TMUXP_DIRECTORY}',
-        'windows': [{
-            'window_name': 'editor',
-            'layout': 'main-horizontal',
-            'options': {'main-pane-height': percent + '%'},
-            'panes': [
-                {'shell_command': ['nvim .'], 'focus': True},
-                {'shell_command': ['codex']},
-            ],
-        }],
-    }, stream)
-PY
-  # tmuxp starts pane shells before sending application commands.
-  # A simultaneous launch may have created the same session meanwhile.
-  DEV_TMUXP_DIRECTORY="$project" tmuxp load -d "$workspace" || {
-    tmux has-session -t "=$session" 2>/dev/null || die 'tmuxp could not create the workspace.'
-  }
-  rm -f -- "$workspace"
-  rmdir -- "$workspace_dir"
-  trap - EXIT
+  terminal_size=$(stty size 2>/dev/null || true)
+  rows=${terminal_size%% *}
+  columns=${terminal_size##* }
+  [[ $rows == <-> && $columns == <-> ]] || { rows=40; columns=120; }
+  tmux new-session -d -s "$session" -c "$project" -n editor -x "$columns" -y "$rows" || die 'could not create the tmux session.'
+  editor_window=$(tmux display-message -p -t "=$session:" '#{window_id}')
+  needs_editor=1
+else
+  editor_window=$(tmux list-windows -t "=$session" -F '#{window_id} #{window_name}' | awk '$2 == "editor" {print $1; exit}')
+  needs_editor=1
+  if [[ -n $editor_window ]]; then
+    pane_commands=$(tmux list-panes -t "$editor_window" -F '#{pane_start_command}')
+    if [[ $pane_commands == *nvim* && $pane_commands == *codex* ]]; then
+      needs_editor=0
+    fi
+  fi
+  if (( needs_editor )); then
+    editor_window=$(tmux new-window -d -P -F '#{window_id}' -t "=$session:" -n editor -c "$project") || die 'could not create the editor window.'
+  fi
 fi
+
+if (( needs_editor )); then
+  editor_pane=$(tmux display-message -p -t "$editor_window" '#{pane_id}')
+  nvim_path=$(command -v nvim)
+  codex_path=$(command -v codex)
+  tmux set-window-option -t "$editor_window" main-pane-height "${NVIM_PERCENT}%"
+  tmux split-window -d -v -l "${CODEX_PERCENT}%" -t "$editor_pane" -c "$project" "exec ${(q)codex_path}" || die 'could not split the editor window.'
+  tmux select-layout -t "$editor_window" main-horizontal
+  tmux respawn-pane -k -t "$editor_pane" -c "$project" "exec ${(q)nvim_path} ." || die 'could not start Neovim.'
+fi
+
+tmux select-window -t "$editor_window"
+editor_pane=$(tmux display-message -p -t "$editor_window" '#{pane_id}')
+tmux select-pane -t "$editor_pane" 2>/dev/null || true
 exec tmux attach-session -t "=$session"

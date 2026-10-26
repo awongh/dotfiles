@@ -1,11 +1,11 @@
 # Dot Files
 
-## iTerm2 development workspace
+## tmux development workspace
 
-Install iTerm2, Python 3, Neovim, and the Codex CLI, then install the workspace tools:
+Install Python 3, Neovim, the Codex CLI, and tmux:
 
 ```sh
-brew install tmux tmuxp
+brew install tmux
 # If tmux -V reports a missing library:
 brew reinstall tmux
 ```
@@ -17,28 +17,30 @@ Run the executable directly; no dotfiles installation is needed:
 ~/.dotfiles/scripts/dev ~/projects/app   # explicit project directory
 ```
 
-The launcher activates iTerm2 and opens a new tab (or a window if none exists).
-Inside it, tmuxp starts `nvim .` above `codex`, both in the project directory.
+The launcher runs in the current terminal. Outside tmux, tmux creates or
+reattaches a project session with `nvim .` above `codex`. Inside tmux, it splits
+the invoking pane in the existing window: Codex starts below, and Neovim starts
+in the original pane. Other panes in that window stay in place. The current
+pane's shell is replaced, so save any work in it before running the command.
+
 Edit `NVIM_PERCENT=65` and `CODEX_PERCENT=35` at the top of `scripts/dev` to
-change their heights. Both must be positive integers totaling 100. Actual
-heights are rounded to terminal rows, allowing space for the divider.
+change their heights. Both must be positive integers totaling 100. Inside tmux,
+`CODEX_PERCENT` sizes the new lower pane relative to the pane being split.
+Outside tmux, `NVIM_PERCENT` sizes the upper pane in the new workspace. Actual
+heights are rounded to terminal rows.
 
-Each canonical directory has its own persistent tmux session. Running again
-opens another tab attached to that session, preserving programs and layout;
-ratio changes affect newly created sessions. Different tabs attached to the
-same session share its panes. Exit an application to return to its pane's shell.
-Detach with tmux's default **Ctrl+b, then d**; running the launcher again
-reattaches. To rebuild with new percentages, first save your work and end the
-old session with `tmux kill-session -t SESSION_NAME` (`tmux list-sessions` lists
-names). This terminates its applications.
+Outside tmux, each canonical directory has its own persistent session. Running
+again reattaches without restarting a live editor pair. If an earlier launch
+left a session without both applications, the launcher adds a new editor window;
+ratio changes affect newly created windows. Inside tmux, each run splits the current pane and starts a fresh
+pair of applications. Leaving Neovim or Codex closes its pane; use tmux's
+normal pane and session commands to manage the workspace.
 
-The new tab uses a login zsh and needs all tools available on its PATH.
-macOS may ask permission for your terminal to control iTerm2; allow it in
-System Settings → Privacy & Security → Automation. The existing tmux config
-is used, including any custom prefix key. The `scripts` directory is excluded
-from the Rake installer's automatic home-directory symlinks.
+All tools must be available on the invoking shell's PATH. The existing tmux
+configuration is used. The `scripts` directory is excluded from the Rake
+installer's automatic home-directory symlinks.
 
-Run the launcher regression checks without opening iTerm2:
+Run the launcher regression checks without starting applications:
 
 ```sh
 python3 scripts/test_dev.py
