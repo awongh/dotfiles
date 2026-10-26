@@ -4,3 +4,8 @@
 vim/plugged/**
 
 /vim/.netrwhist
+
+
+# Neovim logs
+/.nvimlog
+/nvim.log
