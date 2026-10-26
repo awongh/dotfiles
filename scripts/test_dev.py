@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -46,7 +47,7 @@ esac
         path.chmod(0o755)
 
     def run_dev(self, *args, script=SCRIPT):
-        return subprocess.run(['/bin/zsh', str(script), *map(str, args)],
+        return subprocess.run([sys.executable, str(script), *map(str, args)],
                               env=self.env, text=True, capture_output=True)
 
     def commands(self):
@@ -89,9 +90,9 @@ esac
     def test_invalid_ratio_and_directory(self):
         self.assertNotEqual(self.run_dev(self.root / 'missing').returncode, 0)
         changed = self.root / 'dev'
-        changed.write_text(SCRIPT.read_text().replace('NVIM_PERCENT=65', 'NVIM_PERCENT=70'))
+        changed.write_text(SCRIPT.read_text().replace('NVIM_PERCENT = 65', 'NVIM_PERCENT = 70'))
         self.assertIn('totaling 100', self.run_dev(self.root, script=changed).stderr)
-        changed.write_text(SCRIPT.read_text().replace('NVIM_PERCENT=65', 'NVIM_PERCENT=oops'))
+        changed.write_text(SCRIPT.read_text().replace('NVIM_PERCENT = 65', 'NVIM_PERCENT = "oops"'))
         self.assertIn('must be integers', self.run_dev(self.root, script=changed).stderr)
 
 

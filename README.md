@@ -23,7 +23,7 @@ the invoking pane in the existing window: Codex starts below, and Neovim starts
 in the original pane. Other panes in that window stay in place. The current
 pane's shell is replaced, so save any work in it before running the command.
 
-Edit `NVIM_PERCENT=65` and `CODEX_PERCENT=35` at the top of `scripts/dev` to
+Edit `NVIM_PERCENT = 65` and `CODEX_PERCENT = 35` at the top of `scripts/dev` to
 change their heights. Both must be positive integers totaling 100. Inside tmux,
 `CODEX_PERCENT` sizes the new lower pane relative to the pane being split.
 Outside tmux, `NVIM_PERCENT` sizes the upper pane in the new workspace. Actual
