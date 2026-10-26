@@ -1,0 +1,93 @@
+#!/bin/zsh
+# Heights of the upper (Neovim) and lower (Codex) panes. Applied on creation.
+readonly NVIM_PERCENT=65
+readonly CODEX_PERCENT=35
+
+set -eu
+setopt PIPE_FAIL
+
+die() { print -u2 -r -- "dev: $*"; exit 1; }
+[[ $NVIM_PERCENT == <-> && $CODEX_PERCENT == <-> ]] || die 'pane percentages must be integers.'
+if (( NVIM_PERCENT <= 0 || CODEX_PERCENT <= 0 || NVIM_PERCENT + CODEX_PERCENT != 100 )); then
+  die 'NVIM_PERCENT and CODEX_PERCENT must be positive integers totaling 100.'
+fi
+
+attach=0
+if [[ ${1:-} == --attach ]]; then
+  attach=1
+  shift
+fi
+(( $# <= 1 )) || die 'usage: dev [project-directory]'
+project=$(cd -- "${1:-$PWD}" && pwd -P) || die 'project directory does not exist or is inaccessible.'
+
+for tool in tmux tmuxp nvim codex python3; do
+  command -v "$tool" >/dev/null || die "missing $tool; install it and ensure it is on your login-shell PATH. For tmux/tmuxp: brew install tmux tmuxp"
+done
+tmux -V >/dev/null || die 'tmux cannot start; try brew reinstall tmux.'
+
+if (( ! attach )); then
+  [[ -d /Applications/iTerm.app || -d "$HOME/Applications/iTerm.app" ]] || die 'install iTerm2 in /Applications or ~/Applications.'
+  # Quote once for each shell boundary; AppleScript receives data via argv.
+  launcher=${0:A}
+  inner="${(q)launcher} --attach ${(q)project}"
+  launch_command="/bin/zsh -lic ${(q)inner}"
+  osascript - "$launch_command" <<'APPLESCRIPT'
+on run argv
+  tell application "iTerm2"
+    activate
+    if (count of windows) = 0 then
+      set targetWindow to (create window with default profile command (item 1 of argv))
+    else
+      tell current window
+        set targetTab to (create tab with default profile command (item 1 of argv))
+      end tell
+    end if
+  end tell
+end run
+APPLESCRIPT
+  exit
+fi
+
+# The new iTerm tab is a separate client, even when invoked inside tmux.
+unset TMUX TMUX_PANE
+session=$(python3 - "$project" <<'PY'
+import hashlib, os, re, sys
+path = sys.argv[1]
+label = re.sub(r'[^a-zA-Z0-9_-]', '-', os.path.basename(path))[:40] or 'root'
+print('dev-' + label + '-' + hashlib.sha256(os.fsencode(path)).hexdigest()[:16])
+PY
+)
+
+if ! tmux has-session -t "=$session" 2>/dev/null; then
+  workspace_dir=$(mktemp -d "${TMPDIR:-/tmp}/dev-tmuxp.XXXXXXXX")
+  workspace="$workspace_dir/workspace.json"
+  trap 'rm -f -- "$workspace"; rmdir -- "$workspace_dir"' EXIT
+  python3 - "$workspace" "$project" "$session" "$NVIM_PERCENT" <<'PY'
+import json, sys
+filename, directory, session, percent = sys.argv[1:]
+with open(filename, 'w') as stream:
+    json.dump({
+        'session_name': session,
+        # tmuxp expands variables once. Indirection preserves literal $ in paths.
+        'start_directory': '${DEV_TMUXP_DIRECTORY}',
+        'windows': [{
+            'window_name': 'editor',
+            'layout': 'main-horizontal',
+            'options': {'main-pane-height': percent + '%'},
+            'panes': [
+                {'shell_command': ['nvim .'], 'focus': True},
+                {'shell_command': ['codex']},
+            ],
+        }],
+    }, stream)
+PY
+  # tmuxp starts pane shells before sending application commands.
+  # A simultaneous launch may have created the same session meanwhile.
+  DEV_TMUXP_DIRECTORY="$project" tmuxp load -d "$workspace" || {
+    tmux has-session -t "=$session" 2>/dev/null || die 'tmuxp could not create the workspace.'
+  }
+  rm -f -- "$workspace"
+  rmdir -- "$workspace_dir"
+  trap - EXIT
+fi
+exec tmux attach-session -t "=$session"

@@ -1,5 +1,49 @@
 # Dot Files
 
+## iTerm2 development workspace
+
+Install iTerm2, Python 3, Neovim, and the Codex CLI, then install the workspace tools:
+
+```sh
+brew install tmux tmuxp
+# If tmux -V reports a missing library:
+brew reinstall tmux
+```
+
+Run the executable directly; no dotfiles installation is needed:
+
+```sh
+~/.dotfiles/scripts/dev                  # current directory
+~/.dotfiles/scripts/dev ~/projects/app   # explicit project directory
+```
+
+The launcher activates iTerm2 and opens a new tab (or a window if none exists).
+Inside it, tmuxp starts `nvim .` above `codex`, both in the project directory.
+Edit `NVIM_PERCENT=65` and `CODEX_PERCENT=35` at the top of `scripts/dev` to
+change their heights. Both must be positive integers totaling 100. Actual
+heights are rounded to terminal rows, allowing space for the divider.
+
+Each canonical directory has its own persistent tmux session. Running again
+opens another tab attached to that session, preserving programs and layout;
+ratio changes affect newly created sessions. Different tabs attached to the
+same session share its panes. Exit an application to return to its pane's shell.
+Detach with tmux's default **Ctrl+b, then d**; running the launcher again
+reattaches. To rebuild with new percentages, first save your work and end the
+old session with `tmux kill-session -t SESSION_NAME` (`tmux list-sessions` lists
+names). This terminates its applications.
+
+The new tab uses a login zsh and needs all tools available on its PATH.
+macOS may ask permission for your terminal to control iTerm2; allow it in
+System Settings → Privacy & Security → Automation. The existing tmux config
+is used, including any custom prefix key. The `scripts` directory is excluded
+from the Rake installer's automatic home-directory symlinks.
+
+Run the launcher regression checks without opening iTerm2:
+
+```sh
+python3 scripts/test_dev.py
+```
+
 ## Installation
 
 Run the following commands in your terminal. It will prompt you before it does anything destructive.
