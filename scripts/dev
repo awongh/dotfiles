@@ -1,5 +1,6 @@
 #!/bin/zsh
-# Heights of the upper (Neovim) and lower (Codex) panes. Applied on creation.
+# Edit these two percentages to change the initial split. They must total 100.
+# Existing sessions keep their current layout.
 readonly NVIM_PERCENT=65
 readonly CODEX_PERCENT=35
 
@@ -13,6 +14,7 @@ if (( NVIM_PERCENT <= 0 || CODEX_PERCENT <= 0 || NVIM_PERCENT + CODEX_PERCENT !=
 fi
 
 (( $# <= 1 )) || die 'usage: dev [project-directory]'
+# Resolve symlinks so different names for the same directory reuse one session.
 project=$(cd -- "${1:-$PWD}" && pwd -P) || die 'project directory does not exist or is inaccessible.'
 
 for tool in tmux nvim codex; do
@@ -27,6 +29,8 @@ if [[ -n ${TMUX:-} ]]; then
   tmux display-message -p -t "$pane" '#{pane_id}' >/dev/null || die 'cannot find the invoking tmux pane.'
   nvim_path=$(command -v nvim)
   codex_path=$(command -v codex)
+  # Start Codex in a new lower pane, then replace this pane's shell with Neovim.
+  # Full executable paths avoid relying on tmux's possibly older PATH.
   tmux split-window -d -v -l "${CODEX_PERCENT}%" -t "$pane" -c "$project" "exec ${(q)codex_path}" || die 'could not split the current pane.'
   tmux select-pane -t "$pane"
   # Replacing the shell avoids a command queued behind this running script.
@@ -34,6 +38,8 @@ if [[ -n ${TMUX:-} ]]; then
 fi
 
 command -v python3 >/dev/null || die 'missing python3; install it and ensure it is on your PATH.'
+# The readable directory name helps `tmux list-sessions`; the path hash keeps
+# projects with the same basename from colliding.
 session=$(python3 - "$project" <<'PYSESSION'
 import hashlib, os, re, sys
 path = sys.argv[1]
@@ -45,6 +51,8 @@ PYSESSION
 # A previous failed launch may have left a project session with only a shell.
 # Keep any existing windows; create an editor window when no live pair exists.
 if ! tmux has-session -t "=$session" 2>/dev/null; then
+  # Size the detached session like this terminal before calculating the split.
+  # A pipe or other non-terminal caller gets a usable fallback size.
   terminal_size=$(stty size 2>/dev/null || true)
   rows=${terminal_size%% *}
   columns=${terminal_size##* }
@@ -56,6 +64,8 @@ else
   editor_window=$(tmux list-windows -t "=$session" -F '#{window_id} #{window_name}' | awk '$2 == "editor" {print $1; exit}')
   needs_editor=1
   if [[ -n $editor_window ]]; then
+    # Process names can change (for example, wrapper scripts); tmux retains
+    # the commands used to start the panes, which identify this editor pair.
     pane_commands=$(tmux list-panes -t "$editor_window" -F '#{pane_start_command}')
     if [[ $pane_commands == *nvim* && $pane_commands == *codex* ]]; then
       needs_editor=0
@@ -67,6 +77,7 @@ else
 fi
 
 if (( needs_editor )); then
+  # Configure the two-pane layout before attaching, then launch both programs.
   editor_pane=$(tmux display-message -p -t "$editor_window" '#{pane_id}')
   nvim_path=$(command -v nvim)
   codex_path=$(command -v codex)
@@ -76,6 +87,7 @@ if (( needs_editor )); then
   tmux respawn-pane -k -t "$editor_pane" -c "$project" "exec ${(q)nvim_path} ." || die 'could not start Neovim.'
 fi
 
+# Reuse a healthy workspace or show the new editor window in this terminal.
 tmux select-window -t "$editor_window"
 editor_pane=$(tmux display-message -p -t "$editor_window" '#{pane_id}')
 tmux select-pane -t "$editor_pane" 2>/dev/null || true
